@@ -1,5 +1,4 @@
-def allpath(path:str, arr, row:int, col:int, mat:list[int], step:int):
-
+def allpath(path: str, arr, row: int, col: int, mat: list[int], step: int):
     if row == len(arr) - 1 and col == len(arr[0]) - 1:
         arr[row][col] = False
         mat[row][col] = step
@@ -33,11 +32,6 @@ def allpath(path:str, arr, row:int, col:int, mat:list[int], step:int):
     mat[row][col] = 0
 
 
-pl = [
-    [True, True, True],
-    [True, True, True],
-    [True, True, True]
-
-]
+pl = [[True, True, True], [True, True, True], [True, True, True]]
 mat = [[0, 0, 0] for _ in range(3)]
-allpath('', pl, 0, 0, mat, 0)
+allpath("", pl, 0, 0, mat, 0)

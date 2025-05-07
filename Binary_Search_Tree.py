@@ -76,6 +76,40 @@ class BST:
         self._display(node.left, f"Left  node of {node.value} : ")
         self._display(node.right, f"Right node of {node.value} : ")
 
+    def preOrderTraversal(self):
+        self._preOrderTraversal(self.root)
+
+    def _preOrderTraversal(self, node):
+        if node is None:
+            return
+
+        print(f"{node.value}", end=" ")
+        self._preOrderTraversal(node.left)
+        self._preOrderTraversal(node.right)
+
+    def postOrderTraversal(self):
+        self._postOrderTraversal(self.root)
+
+    def _postOrderTraversal(self, node):
+        if node is None:
+            return
+
+        self._postOrderTraversal(node.left)
+        self._postOrderTraversal(node.right)
+
+        print(f"{node.value}", end=" ")
+
+    def inOrderTraversal(self):
+        self._inOrderTraversal(self.root)
+
+    def _inOrderTraversal(self, node):
+        if node is None:
+            return
+
+        self._inOrderTraversal(node.left)
+        print(f"{node.value}", end=" ")
+        self._inOrderTraversal(node.right)
+
 
 if __name__ == "__main__":
     bst = BST()
@@ -83,3 +117,12 @@ if __name__ == "__main__":
     bst.populate(nums)
     bst.display()
     print("Balanced BST?", bst.balanced())
+    print()
+    print("Pre Order :")
+    bst.preOrderTraversal()
+    print()
+    print("Post Order : ")
+    bst.postOrderTraversal()
+    print()
+    print("In Order : ")
+    bst.inOrderTraversal()

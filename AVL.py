@@ -41,62 +41,59 @@ class AVL:
             # left-left case
             # why we are doing this  .left .left , first build the normal left left tree and  then
             # calculate the thing like left.left tree height greater than  left.right  means we have left left case  ( ~/ vice versa for right-right case )
-            if (self._height(node.left.left) - self._height(node.left.right)) > 0:
+            if self._height(node.left.left) >= self._height(node.left.right):
                 return self.rightRotate(node)
 
             # left-right case
             # for this  if  we have .left.left tree height less than .left.right will make  the situation of left-right
-            if (self._height(node.left.left) - self._height(node.left.right)) < 0:
+            if self._height(node.left.left) <= self._height(node.left.right):
                 node.left = self.leftRotate(node.left)
                 return self.rightRotate(node)
 
         # Right Heavy
-        if (self._height(node.left) - self._height(node.right)) < 1:
+        elif (self._height(node.left) - self._height(node.right)) < -1:
             # Right-Righ case
-            if (self._height(node.right.right) - self._height(node.right.left)) > 0:
+            if self._height(node.right.left) <= self._height(node.right.right):
                 return self.leftRotate(node)
 
-            # left-right case
-            if (self._height(node.right.right) - self._height(node.right.left)) < 0:
+            # right-left case
+            if self._height(node.right.left) >= self._height(node.right.right):
                 node.right = self.rightRotate(node.right)
                 return self.leftRotate(node)
 
         return node
 
-    def rightRotate(self, node):
-        p = node
+    def rightRotate(self, p):
         c = p.left
-
         t2 = c.right
 
-        p.left = t2
         c.right = p
+        p.left = t2
 
         p.height = 1 + max(self._height(p.left), self._height(p.right))
         c.height = 1 + max(self._height(c.left), self._height(c.right))
 
         return c
 
-    def leftRotate(self, node):
-        p = node
-        c = p.right
+    def leftRotate(self, c):
+        p = c.right
 
-        t2 = c.left
+        t2 = p.left
 
-        p.right = t2
-        c.left = p
+        p.left = c
+        c.right = t2
 
         p.height = 1 + max(self._height(p.left), self._height(p.right))
         c.height = 1 + max(self._height(c.left), self._height(c.right))
 
-        return c
+        return p
 
     def populate(self, nums):
         for i in range(len(nums)):
             self.insert(nums[i])
 
     def populateSorted(self, nums):
-        self._populateSorted(self, nums, 0, len(nums))
+        self._populateSorted(nums, 0, len(nums))
 
     def _populateSorted(self, nums, start, end):
         if start >= end:

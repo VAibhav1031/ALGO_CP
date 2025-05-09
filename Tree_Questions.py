@@ -83,10 +83,33 @@ class BinaryTree:
         return queue[0]
 
 
-
-
-
     
+    # in this  we just have 
+    # Given the root of a binary tree, return the bottom-up level order traversal of its nodes' values. (i.e., from left to right, level by level from leaf to root).
+    # simple  as fuck ,  just we have to reverse the result what we did the in first part
+    def levelOrder_Second(self, root):
+        if root is None:
+            return
+
+        queue = deque([root])
+        result = []
+        while queue:
+            level_size = len(queue)
+            current_level = []
+            for _ in range(level_size):
+                curr_node = queue.popleft()
+                current_level.append(curr_node.value)
+                if curr_node.left:
+                    queue.append(node.left)
+
+                if curr_node.right:
+                    queue.append(node.right)
+
+
+            result.append(current_level)
+
+
+        return result[::-1]
         
 
 if __name__ == "__main__":

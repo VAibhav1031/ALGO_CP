@@ -110,37 +110,83 @@ class BinaryTree:
 
 
         return result[::-1]
+
+
+
+
+    def rightSideView(self, root):
+        if not root:
+            return []
+
+        results = []
+
+        queue = deque([root])
+        while queue:
+            level_size = len(queue)
+
+            for i in range(level_size):
+                curr_node = queue.popleft()
+
+                if i == level_size-1:
+                    results.append(curr_node.value)
+
+                if curr_node.left:
+                    queue.append(curr_node.left)
+
+                if curr_node.right:
+                    queue.append(curr_node.right)
+
+
+
+        return results
+
         
 
 if __name__ == "__main__":
 
 
     ## Test Cases of the levelOrderSuccessor
-    root = Node(20)
-    root.left = Node(10)
-    root.left.left = Node(4) 
-    root.left.right = Node(18) 
-    root.right = Node(26)
-    root.right.left = Node(24) 
-    root.right.right = Node(27) 
-    root.left.right.left = Node(14) 
-    root.left.right.left.left = Node(13) 
-    root.left.right.left.right = Node(15)
-    root.left.right.right = Node(19)
- 
-    key = root.right.left # node 24 
+    # root = Node(20)
+    # root.left = Node(10)
+    # root.left.left = Node(4) 
+    # root.left.right = Node(18) 
+    # root.right = Node(26)
+    # root.right.left = Node(24) 
+    # root.right.right = Node(27) 
+    # root.left.right.left = Node(14) 
+    # root.left.right.left.left = Node(13) 
+    # root.left.right.left.right = Node(15)
+    # root.left.right.right = Node(19)
+    #
+    # key = root.right.left # node 24 
+    #
+    # bt = BinaryTree()
+    # res = bt.levelOrderSuccessor(root, key) 
+    #
+    # if res: 
+    #     print("LevelOrder successor of " +
+    #              str(key.value) + " is " +
+    #              str(res.value)) 
+    #
+    # else:
+    #     print("LevelOrder successor of " +
+    #           str(key.value) + " is NULL")
     
+
+    ## Test case of the rightview of BinaryTree
+    
+    root = Node(1)
+    root.left = Node(2)
+    root.right = Node(3)
+    root.left.right = None
+    root.left.right = Node(5)
+    root.right.left = None
+    root.right.right = Node(4)
+
+
     bt = BinaryTree()
-    res = bt.levelOrderSuccessor(root, key) 
- 
-    if res: 
-        print("LevelOrder successor of " +
-                 str(key.value) + " is " +
-                 str(res.value)) 
-     
-    else:
-        print("LevelOrder successor of " +
-              str(key.value) + " is NULL")
+    print(bt.rightSideView(root))
+
 
 
 

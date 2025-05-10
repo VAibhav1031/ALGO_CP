@@ -140,6 +140,58 @@ class BinaryTree:
 
         return results
 
+
+
+    def symmetric(self, root):
+
+        # in this  we basically want to  know whether the  binary tree is the symmetric/mirror , more in layman way palindrome ,
+        # they just want to know like  if we  fold the paper  both side will show equality ,  mirror for
+        # you can check the leetcode symmetric question very easy just few thing to know 
+        #
+        # so  we dont add the root , there is no need for that  we first add the its left and right 
+        # we will check both thing , are they have anomaly or not , if not we will move and 
+        # add the  both  end /edges  
+          #      1
+          #    /   \
+          #   2     2
+          #  / \   / \
+          # 3   4 4   3
+
+        # so in this we  have  to  check  whethere both tree edges are same not , like we use to do in palindrome
+        # lets take example - "arora"   fir  "a" from first and last  yes same then move inside check both again 
+        #
+        # same we have to do here  
+        #
+        # how we add them  , we are gonna add the left and right node of root and always check validity then we will add the elements 
+        # first  two last edges then  there inner edges 
+        # [not2,not2,3,3,4,4] ,  here not2  means  they are popped and then only it will proceed and add them 
+
+        queue = deque()
+        queue.append(root.left)
+        queue.append(root.right)
+
+        while queue:
+            left = queue.popleft()
+            right = queue.popleft()
+
+            if left is None and right is None:
+                continue
+
+            if left is None or right is None:
+                return False 
+
+            if left.value != right.value:
+                return False
+
+
+            queue.append(left.left)
+            queue.append(right.right)
+            queue.append(left.right)
+            queue.append(right.left)
+
+
+        return True
+
         
 
 if __name__ == "__main__":

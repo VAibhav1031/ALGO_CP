@@ -71,7 +71,6 @@ def ways_to_put_n_queens(n: int) -> int:
 
                 else:
                     print("x", end = " ")
-
             print()
 
     cols, main_diag , anti_diag = set(), set(),set()
@@ -80,8 +79,12 @@ def ways_to_put_n_queens(n: int) -> int:
 
 
 if __name__ == "__main__":
+    import time 
     n = int(input("Enter the n :"))
+    st = time.time()
     print(ways_to_put_n_queens(n))
+    et = time.time()
+    print((et-st)*1000)
         
 
 

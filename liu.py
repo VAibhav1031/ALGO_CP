@@ -10,6 +10,7 @@
 # print_n(9)
 #
 
+
 # now to make  it  in  reverse form
 #
 # we have  to  change the  hypothesis  like  earlier  it  was  1 to n now it is the n to 1

@@ -47,15 +47,16 @@ def find_files_matching_pattern(searchPath, pattern, depth):
 pat = re.compile(r"cat\d+\.jpg")
 searchpath = "~/Documents_test"
 
-print(find_files_matching_pattern(searchpath, pat, 0))
+# print(find_files_matching_pattern(searchpath, pat, 0))
 
 # ---------------------------------------ITERATIVE--------------------------------------------------
 
 stack = []
 pattern = pat
-stack.append({"searchPath": "~/Documents"})
+stack.append(({"searchPath": "~/Documents_test"}, False))
+visited = False
 while stack:  # or you can say !stack.empty ,
-    frame = stack.pop()
+    frame, visited = stack.pop()
     path = os.path.expanduser(frame["searchPath"])
     if os.path.isfile(path):
         match = pattern.search(os.path.basename(path))
@@ -64,6 +65,12 @@ while stack:  # or you can say !stack.empty ,
             print(os.path.basename(path))
 
     elif os.path.isdir(path):
-        for items in os.listdir(path)[::-1]:
-            new_path = os.path.join(path, items)
-            stack.append({"searchPath": new_path})
+        if visited:
+            print("Dir alreay visited/ (POST-ORDER) Dir : ", path)
+
+        else:
+            stack.append(({"searchPath": path}, True))
+
+            for items in os.listdir(path)[::-1]:
+                new_path = os.path.join(path, items)
+                stack.append(({"searchPath": new_path}, False))

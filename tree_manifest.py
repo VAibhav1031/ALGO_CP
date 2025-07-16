@@ -84,31 +84,119 @@ class BinaryTree:
             self._populate_from_list(node.right, list, (2*index)+2)
 
 
-def populate_from_list_iterative(self, list):
-    if not list or list[0] is None:
-      self.root= None
-      return
-    self._populate_from_list_iterative(self, list)
+    def populate_from_list_iterative(self, list):
+        if not list or list[0] is None:
+            self.root= None
+            return
+        self._populate_from_list_iterative(list)
 
-def _populate_from_list_iterative(self, arr):
-    self.root = Node(arr[0])
-    queue = deque()
-    queue.append((self.root, 0))
+    def _populate_from_list_iterative(self, arr):
+        self.root = Node(arr[0])
+        queue = deque()
+        queue.append((self.root, 0))
 
-    while queue:
-        node, i  = queue.popleft()
+        while queue:
+            node, i  = queue.popleft()
 
-        left_index = (2*i)+1
-        right_index = (2*i)+2
+            left_index = (2*i)+1
+            right_index = (2*i)+2
 
-        if left_index<len(arr) and arr[left_index] is not None:
-            node.left = Node(arr[left_index])
-            queue.append((node.left, left_index))
+            if left_index<len(arr) and arr[left_index] is not None:
+                node.left = Node(arr[left_index])
+                queue.append((node.left, left_index))
 
-        if right_index<len(arr) and arr[right_index] is not None:
-            node.right = Node(arr[right_index])
-            queue.append((node.right, right_index))
+            if right_index<len(arr) and arr[right_index] is not None:
+                node.right = Node(arr[right_index])
+                queue.append((node.right, right_index))
 
+
+
+    def inorder(self, node):
+        # left Root right
+        if node is None:
+            return []
+
+
+        left = self.inorder(node.left)
+        right = self.inorder(node.right)
+
+        return left+ [node.value] + right
+
+
+
+    def postorder(self, node):
+        #   left right root
+        if node is None:
+            return []
+
+
+        left = self.postorder(node.left)
+        right = self.postorder(node.right)
+
+        return left+ right + [node.value]
+
+
+    def preorder(self, node):
+        #   left right root
+        if node is None:
+            return []
+
+
+        left = self.preorder(node.left)
+        right = self.preorder(node.right)
+
+        return [node.value] + left + right
+
+
+    def height(self, node, level):
+        # okay height of the treee wile be  max(height of left-subtree,height of thr right-subtree)
+        if node is None:
+            return level
+
+        left_subtree  = self.height(node.left, level + 1)
+        right_subtree = self.height(node.right, level + 1)
+
+        return max(left_subtree, right_subtree)
+
+    def height1(self, node):
+        if node is None:
+            return 0
+        return 1 + max(self.height1(node.left), self.height1(node.right))
+
+
+    def tolist(self, node):
+        #  we will use the level-order format
+        if  node is None:
+            return
+        queue = deque([node])
+        result = []
+        while queue:
+            current_level = []
+            level_size = len(queue)
+            for _ in range(level_size):
+                curr_node = queue.popleft()
+                current_level.append(curr_node.value)
+                if curr_node.left:
+                    queue.append(curr_node.left)
+
+
+                if curr_node.right:
+                    queue.append(curr_node.right)
+
+
+            result.append(current_level)
+
+
+        return result
+
+
+    def invert(self, node):
+        if node is None:
+            return
+
+        node.left, node.right = node.right, node.left
+        self.invert(node.left)
+        self.invert(node.right)
 
     def display(self):
         self._display()
@@ -147,5 +235,10 @@ def _populate_from_list_iterative(self, arr):
 
 if __name__ == "__main__":
     BT = BinaryTree()
-    BT.populate()
-    BT.display1()
+    BT.populate_from_list([1, 2, 3, 4, 5, 6, 7])
+    print(BT.inorder(BT.root))
+    print(BT.postorder(BT.root))
+    print(BT.height(BT.root,0))
+    print(BT.height1(BT.root))
+    BT.invert(BT.root)
+    print(BT.tolist(BT.root))

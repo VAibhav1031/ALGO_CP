@@ -9,7 +9,7 @@ class Node:
         self.value = value
         self.left = None
         self.right = None
-
+        self.height = 0
 
 class BinaryTree:
     def __init__(self):
@@ -171,21 +171,14 @@ class BinaryTree:
         queue = deque([node])
         result = []
         while queue:
-            current_level = []
-            level_size = len(queue)
-            for _ in range(level_size):
-                curr_node = queue.popleft()
-                current_level.append(curr_node.value)
-                if curr_node.left:
-                    queue.append(curr_node.left)
+            curr_node = queue.popleft()
+            if curr_node:
+                result.append(curr_node.value)
+                queue.append(curr_node.left)
+                queue.append(curr_node.right)
 
-
-                if curr_node.right:
-                    queue.append(curr_node.right)
-
-
-            result.append(current_level)
-
+            else:
+                queue.append(None)
 
         return result
 
@@ -232,13 +225,150 @@ class BinaryTree:
 
 
 
+class BST(BinaryTree):
+    def __init__(self):
+        super().__init__()
+        self.root=None
+
+    def height_bst(self, node):
+        return self._height(node)
+
+    def _height(self, node):
+        if node is None:
+            return -1
+        return node.height
+
+    def insert(self, value):
+        self.root = self._insert(value, self.root)
+
+
+
+    def _insert(self, value, node):
+        if node is None:# it is  something  when we hit the base null value then we create a new node and return it  and it will save to desired location(left or right)
+            new_node = Node(value)
+            return new_node
+
+        if value < node.value:
+            node.left = self._insert(value, node.left)
+        if value > node.value:
+            node.right = self._insert(value, node.right)
+        node.height = 1 + max(self.height_bst(node.left), self.height_bst(node.right))
+
+        return node #  if  everything goes right we are returning the node , at which changes were ocurred
+
+
+
+
+    def populate(self, nums):
+        for i in range(len(nums)):
+            self.insert(nums[i])
+
+    def _populate_sorted(self, nums):
+        self.populated_sorted(nums, 0, len(nums))
+
+    # preventing skewness if we got sorted array to populate
+    def populated_sorted(self,nums, start, end):
+        if start>=end:
+            return
+
+        mid = (start+end)//2
+        self.insert(nums[mid])
+        self.populated_sorted(nums,start, mid)
+        self.populated_sorted(nums,mid+1, end)
+
+
+    def isbalanced(self, node):
+        return self._isbalanced(node)
+
+
+    def _isbalanced(self, node):
+        if node is None:
+            return True
+
+        return  abs(self.height_bst(node.left)-self.height_bst(node.right))<=1 and self._isbalanced(node.left) and self._isbalanced(node.right)
+
+
+    def search(self, value):
+        return self._search(value, self.root)
+
+    def _search(self, val, node):
+        if node is None:
+            return False
+
+        if node.value == val:
+            return True
+
+        elif val<node.value:
+            self._search(val, node.left)
+
+        else:
+            self._search(val, node.right)
+
+
+
+    def find_node(self, node, val):
+        if node is None:
+            return None
+
+        if node.value == val:
+            return node
+
+        elif val<node.value:
+            return self._search(val, node.left)
+
+        else:
+            return self._search(val, node.right)
+
+
+
+    def delete(self, val, node):#node is  acting as parent node/root node
+        # delete then balance the tree(will do that later)
+        if node is None:
+            return None
+        if val<node.value:
+            node.left = self.delete(val, node.left)
+        elif val>node.value:
+            node.right = self.delete(val, node.right)
+        else:
+            if node.right is None and node.left is None:
+                return None
+
+            if node.left is None:
+                return node.right
+
+            if node.right is None:
+                return node.left
+
+            else:
+                sucessor = self.get_min(node.right)
+                node.value = sucessor.value
+                node.right = self.delete(sucessor.value, node.right)
+
+
+        return node
+
+
+
+    def get_min(self, node):
+        while node.left:
+            node = node.left
+        return node
+
+    def display_BST(self, node):
+        self._display_BST(node,"The root of the Tree ")
+    def _display_BST(self, node, details):
+        if node is None:
+            return
+
+        print(details+ str(node.value))
+        if node.left:
+            self._display_BST(node.left,f"value of the left node  of {node.value} :")
+        if node.right:
+            self._display_BST(node.right,f"value of the right node  of {node.value} :")
 
 if __name__ == "__main__":
     BT = BinaryTree()
     BT.populate_from_list([1, 2, 3, 4, 5, 6, 7])
-    print(BT.inorder(BT.root))
-    print(BT.postorder(BT.root))
-    print(BT.height(BT.root,0))
-    print(BT.height1(BT.root))
-    BT.invert(BT.root)
-    print(BT.tolist(BT.root))
+    bst = BST()
+    bst.populated_sorted([1, 2, 3, 4, 5, 6, 7], 0, 7)
+    bst.display_BST(bst.root)

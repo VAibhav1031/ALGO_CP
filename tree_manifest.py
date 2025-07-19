@@ -254,9 +254,7 @@ class BST(BinaryTree):
             node.right = self._insert(value, node.right)
         node.height = 1 + max(self.height_bst(node.left), self.height_bst(node.right))
 
-        return node #  if  everything goes right we are returning the node , at which changes were ocurred
-
-
+        return self.self_balancing(node) #  if  everything goes right we are returning the node , at which changes were ocurred
 
 
     def populate(self, nums):
@@ -287,7 +285,6 @@ class BST(BinaryTree):
 
         return  abs(self.height_bst(node.left)-self.height_bst(node.right))<=1 and self._isbalanced(node.left) and self._isbalanced(node.right)
 
-
     def search(self, value):
         return self._search(value, self.root)
 
@@ -299,27 +296,14 @@ class BST(BinaryTree):
             return True
 
         elif val<node.value:
-            self._search(val, node.left)
-
-        else:
-            self._search(val, node.right)
-
-
-
-    def find_node(self, node, val):
-        if node is None:
-            return None
-
-        if node.value == val:
-            return node
-
-        elif val<node.value:
             return self._search(val, node.left)
 
         else:
             return self._search(val, node.right)
 
 
+    def delete_value(self, value):
+        return self.delete(value, self.root)
 
     def delete(self, val, node):#node is  acting as parent node/root node
         # delete then balance the tree(will do that later)
@@ -345,9 +329,7 @@ class BST(BinaryTree):
                 node.right = self.delete(sucessor.value, node.right)
 
 
-        return node
-
-
+        return self.self_balancing(node)
 
     def get_min(self, node):
         while node.left:
@@ -365,6 +347,63 @@ class BST(BinaryTree):
             self._display_BST(node.left,f"value of the left node  of {node.value} :")
         if node.right:
             self._display_BST(node.right,f"value of the right node  of {node.value} :")
+
+
+    def self_balancing(self, node):
+        if self._isbalanced(node):
+            return node
+
+        height_diff = self.height_bst(node.left) - self.height_bst(node.right)
+        # you think how it will go
+        if  height_diff > 1:
+            # left heavy
+            if (self.height_bst(node.left.left) - self.height_bst(node.left.right) > 0):
+                # left-left heavy
+                return self.right_rotate(node)
+                # cause we have to  reassign the  tree node , if we dont it will destroy tree
+
+            if (self.height_bst(node.left.left) - self.height_bst(node.left.right)<0):
+               # left-right heavy
+               node.left = self.left_rotate(node.left)
+               return self.right_rotate(node)
+
+        if height_diff<-1:
+            # Right heavy
+            if (self.height_bst(node.right.left) - self.height_bst(node.right.right) < 0):
+                # right-right heavy
+                return self.left_rotate(node)
+                # cause we have to  reassign the  tree node , if we dont it will destroy tree
+
+            if (self.height_bst(node.right.left) - self.height_bst(node.right.right)>0):
+               # right-left heavy
+               node.right = self.right_rotate(node.right)
+               return self.left_rotate(node)
+
+
+    def right_rotate(self, p):
+        c = p.left
+        t = c.right
+
+        c.right = p
+        p.left = t
+
+        p.height = max(self.height_bst(p.left), self.height_bst(p.right)) + 1
+        c.height = max(self.height_bst(c.left), self.height_bst(c.right)) + 1
+
+
+        return c
+
+    def left_rotate(self, c):
+            p = c.right
+            t = p.left
+
+            p.left = c
+            c.right = t
+
+            p.height = max(self.height_bst(p.left), self.height_bst(p.right)) + 1
+            c.height = max(self.height_bst(c.left), self.height_bst(c.right)) + 1
+
+            return p
 
 if __name__ == "__main__":
     BT = BinaryTree()
